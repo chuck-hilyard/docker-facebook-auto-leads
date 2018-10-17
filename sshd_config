@@ -1,0 +1,14 @@
+
+PasswordAuthentication yes
+PubkeyAuthentication yes
+ChallengeResponseAuthentication no
+UsePAM yes
+X11Forwarding yes
+PrintMotd no
+AcceptEnv LANG LC_*
+Subsystem	sftpinternal-sftp
+Match Group sftp_users
+X11Forwarding no
+AllowTcpForwarding no
+ChrootDirectory /home/%u
+ForceCommand internal-sftp
