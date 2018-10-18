@@ -23,7 +23,7 @@ def add_user(allusers):
     # strip the prefix off allusers/raw_username
     regex_string = "^facebook-auto-leads/users/"
     username = re.sub(regex_string, '', raw_username)
-    password = "\'{}\'".format(raw_password)
+    password = raw_password
     homedir = "/home/{}".format(username)
     print("password", password)
     subprocess.run(["useradd", "-c", "gecos", "-d", homedir, "-g", "sftp_users", "-m", "-N", "-p", password, username])
