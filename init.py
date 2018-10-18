@@ -55,7 +55,6 @@ def main():
     if is_consul_up() == 200:
       print("consul is up")
       allusers = scrape_consul_for_users()
-      print("allusers: ", allusers)
       compare_user_list(allusers)
       add_user(allusers)
     else:
