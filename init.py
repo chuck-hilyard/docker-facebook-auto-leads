@@ -26,6 +26,8 @@ def add_user(allusers):
     homedir = "/home/{}".format(username)
     subprocess.run(["useradd", "-c", "gecos", "-d", homedir, "-g", "sftp_users", "-m", "-N", "-p", password, username])
     time.sleep(3)
+    subprocess.run(["usermod", "-p", password, username])
+    time.sleep(3)
     subprocess.run(["chown", "root", homedir])
 
 def remove_user(user):
