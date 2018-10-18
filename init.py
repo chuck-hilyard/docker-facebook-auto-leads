@@ -19,10 +19,11 @@ def maintain_config_state():
   print("validating operating environment")
 
 def add_user(allusers):
-  for raw_username, password in allusers.items():
+  for raw_username, raw_password in allusers.items():
     # strip the prefix off allusers/raw_username
     regex_string = "^facebook-auto-leads/users/"
     username = re.sub(regex_string, '', raw_username)
+    password = "\'{}\'".format(raw_password)
     homedir = "/home/{}".format(username)
     subprocess.run(["useradd", "-c", "gecos", "-d", homedir, "-g", "sftp_users", "-m", "-N", "-p", password, username])
     time.sleep(3)
