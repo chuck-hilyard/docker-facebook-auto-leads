@@ -1,4 +1,6 @@
-
+Port 2222
+SyslogFacility AUTH
+LogLevel DEBUG
 PasswordAuthentication yes
 PubkeyAuthentication yes
 ChallengeResponseAuthentication no
@@ -6,7 +8,7 @@ UsePAM yes
 X11Forwarding yes
 PrintMotd no
 AcceptEnv LANG LC_*
-Subsystem	sftpinternal-sftp
+Subsystem sftp internal-sftp
 Match Group sftp_users
 X11Forwarding no
 AllowTcpForwarding no
