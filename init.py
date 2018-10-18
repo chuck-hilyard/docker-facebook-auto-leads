@@ -25,6 +25,7 @@ def add_user(allusers):
     username = re.sub(regex_string, '', raw_username)
     password = "\'{}\'".format(raw_password)
     homedir = "/home/{}".format(username)
+    print("password", password)
     subprocess.run(["useradd", "-c", "gecos", "-d", homedir, "-g", "sftp_users", "-m", "-N", "-p", password, username])
     time.sleep(3)
     subprocess.run(["usermod", "-p", password, username])
