@@ -1,6 +1,6 @@
 Port 2222
 SyslogFacility AUTH
-LogLevel DEBUG
+LogLevel INFO
 PasswordAuthentication yes
 PubkeyAuthentication yes
 ChallengeResponseAuthentication no
