@@ -13,4 +13,4 @@ Match Group sftp_users
 X11Forwarding no
 AllowTcpForwarding no
 ChrootDirectory /home/%u
-ForceCommand internal-sftp
+ForceCommand internal-sftp -l VERBOSE
