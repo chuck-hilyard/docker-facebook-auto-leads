@@ -8,7 +8,7 @@ UsePAM yes
 X11Forwarding yes
 PrintMotd no
 AcceptEnv LANG LC_*
-Subsystem sftp internal-sftp
+Subsystem sftp internal-sftp -l VERBOSE
 Match Group sftp_users
 X11Forwarding no
 AllowTcpForwarding no
