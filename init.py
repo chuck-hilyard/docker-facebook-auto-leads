@@ -9,6 +9,8 @@ import pwd, grp
 import re
 
 def install_software():
+  subprocess.run(["systemctl", "enable", "rsyslog.service"])
+  time.sleep(10)
   subprocess.run(["mkdir", "/etc/skel/.ssh"])
   time.sleep(10)
   subprocess.run(["mkdir", "/etc/skel/catalog"])
@@ -16,6 +18,8 @@ def install_software():
   subprocess.run(["mkdir", "/etc/skel/product"])
   time.sleep(10)
   subprocess.run(["service", "ssh", "start"])
+  time.sleep(10)
+  subprocess.run(["service", "rsyslog", "start"])
 
 def maintain_config_state():
   print("validating operating environment")

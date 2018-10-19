@@ -1,6 +1,6 @@
 Port 2222
 SyslogFacility AUTH
-LogLevel DEBUG
+LogLevel INFO
 PasswordAuthentication yes
 PubkeyAuthentication yes
 ChallengeResponseAuthentication no
@@ -8,9 +8,9 @@ UsePAM yes
 X11Forwarding yes
 PrintMotd no
 AcceptEnv LANG LC_*
-Subsystem sftp internal-sftp
+Subsystem sftp internal-sftp -l VERBOSE
 Match Group sftp_users
 X11Forwarding no
 AllowTcpForwarding no
 ChrootDirectory /home/%u
-ForceCommand internal-sftp
+ForceCommand internal-sftp -l VERBOSE
