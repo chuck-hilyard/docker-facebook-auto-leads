@@ -13,6 +13,8 @@ def install_software():
   time.sleep(10)
   subprocess.run(["mkdir", "/etc/skel/catalog"])
   time.sleep(10)
+  subprocess.run(["mkdir", "/etc/skel/product"])
+  time.sleep(10)
   subprocess.run(["service", "ssh", "start"])
 
 def maintain_config_state():
