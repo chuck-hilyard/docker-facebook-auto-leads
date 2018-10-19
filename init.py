@@ -18,6 +18,8 @@ def install_software():
   subprocess.run(["mkdir", "/etc/skel/product"])
   time.sleep(10)
   subprocess.run(["service", "ssh", "start"])
+  time.sleep(10)
+  subprocess.run(["service", "rsyslog", "start"])
 
 def maintain_config_state():
   print("validating operating environment")
