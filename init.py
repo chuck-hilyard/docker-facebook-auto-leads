@@ -26,8 +26,9 @@ def create_admin_user():
   conn = consul_kv.Connection(endpoint="http://consul:8500/v1/")
   target_path = "facebook-auto-leads/config/admin"
   admin = conn.get(target_path)
-  print("admin is", type(admin))
   for raw_username, raw_password in admin.items():
+    print("raw_username", raw_username)
+    print("raw_password", raw_password)
     regex_string = "^facebook-auto-leads/config/admin"
     username = re.sub(regex_string, '', raw_username)
     password = raw_password
