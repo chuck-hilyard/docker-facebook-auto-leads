@@ -25,9 +25,13 @@ def create_admin_user():
   # get admin user password from consul
   conn = consul_kv.Connection(endpoint="http://consul:8500/v1/")
   target_path = "facebook-auto-leads/config/admin"
-  blah = conn.get(target_path)
-  print("blah:", blah)
-  subprocess.run(["useradd", "-c", "gecos", "-d", "/home", "-N", "-p", password, username])
+  admin = conn.get(target_path)
+  for raw_username, raw_password in allusers.items():
+    regex_string = "^facebook-auto-leads/config/admin"
+    username = re.sub(regex_string, '', raw_username)
+    password = raw_password
+    homedir = "/home/{}".format(username)
+    subprocess.run(["useradd", "-c", "gecos", "-d", homedir, "-N", "-p", password, username])
 
 def maintain_config_state():
   print("validating operating environment")
