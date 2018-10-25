@@ -26,7 +26,6 @@ def create_admin_user():
   conn = consul_kv.Connection(endpoint="http://consul:8500/v1/")
   target_path = "facebook-auto-leads/config/admin"
   admin = conn.get(target_path)
-  print("admin: ", admin)
   for raw_username, raw_password in admin.items():
     regex_string = "^facebook-auto-leads/config/"
     username = re.sub(regex_string, '', raw_username)
@@ -56,7 +55,7 @@ def remove_user(user):
   print("removing user: ", user)
 
 def compare_user_list(allusers):
-  print("comparing users in consul to passwd - skipping this for now, instead let's just add users")
+  print("comparing users in consul to passwd")
 
 def is_consul_up():
   url = "http://consul:8500/v1/catalog/service/media-team-devops-automation-jenkins-agent"
