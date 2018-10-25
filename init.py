@@ -21,6 +21,14 @@ def install_software():
   time.sleep(10)
   subprocess.run(["service", "rsyslog", "start"])
 
+def create_admin_user():
+  # get admin user password from consul
+  conn = consul_kv.Connection(endpoint="http://consul:8500/v1/")
+  target_path = "facebook-auto-leads/config/admin"
+  blah = conn.get(target_path)
+  print("blah:", blah)
+  subprocess.run(["useradd", "-c", "gecos", "-d", "/home", "-N", "-p", password, username])
+
 def maintain_config_state():
   print("validating operating environment")
 
@@ -69,4 +77,5 @@ def main():
 
 if __name__ == '__main__':
   install_software()
+  create_admin_user()
   main()
