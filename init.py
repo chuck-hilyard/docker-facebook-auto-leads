@@ -13,9 +13,9 @@ def install_software():
   time.sleep(10)
   subprocess.run(["mkdir", "/etc/skel/.ssh"])
   time.sleep(10)
-  subprocess.run(["mkdir", "/etc/skel/catalog"])
+  subprocess.run(["mkdir", "-m", "775", "/etc/skel/catalog"])
   time.sleep(10)
-  subprocess.run(["mkdir", "/etc/skel/product"])
+  subprocess.run(["mkdir", "-m", "775", "/etc/skel/product"])
   time.sleep(10)
   subprocess.run(["service", "ssh", "start"])
   time.sleep(10)
@@ -33,6 +33,8 @@ def create_admin_user():
     password = raw_password
     homedir = "/home/{}".format(username)
     subprocess.run(["useradd", "-c", "gecos", "-d", homedir, "-N", "-p", password, username])
+    time.sleep(3)
+    subprocess.run(["usermod", "-G", "sftp_users", username])
 
 def maintain_config_state():
   print("validating operating environment")
