@@ -13,13 +13,27 @@ def install_software():
   time.sleep(10)
   subprocess.run(["mkdir", "/etc/skel/.ssh"])
   time.sleep(10)
-  subprocess.run(["mkdir", "/etc/skel/catalog"])
+  subprocess.run(["mkdir", "-m", "775", "/etc/skel/catalog"])
   time.sleep(10)
-  subprocess.run(["mkdir", "/etc/skel/product"])
+  subprocess.run(["mkdir", "-m", "775", "/etc/skel/product"])
   time.sleep(10)
   subprocess.run(["service", "ssh", "start"])
   time.sleep(10)
   subprocess.run(["service", "rsyslog", "start"])
+
+def create_admin_user():
+  # get admin user password from consul
+  conn = consul_kv.Connection(endpoint="http://consul:8500/v1/")
+  target_path = "facebook-auto-leads/config/admin"
+  admin = conn.get(target_path)
+  for raw_username, raw_password in admin.items():
+    regex_string = "^facebook-auto-leads/config/"
+    username = re.sub(regex_string, '', raw_username)
+    password = raw_password
+    homedir = "/home/{}".format(username)
+    subprocess.run(["useradd", "-c", "gecos", "-d", homedir, "-N", "-p", password, username])
+    time.sleep(3)
+    subprocess.run(["usermod", "-G", "sftp_users", username])
 
 def maintain_config_state():
   print("validating operating environment")
@@ -41,7 +55,7 @@ def remove_user(user):
   print("removing user: ", user)
 
 def compare_user_list(allusers):
-  print("comparing users in consul to passwd - skipping this for now, instead let's just add users")
+  print("comparing users in consul to passwd")
 
 def is_consul_up():
   url = "http://consul:8500/v1/catalog/service/media-team-devops-automation-jenkins-agent"
@@ -69,4 +83,5 @@ def main():
 
 if __name__ == '__main__':
   install_software()
+  create_admin_user()
   main()
