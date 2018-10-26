@@ -33,6 +33,7 @@ def create_admin_user():
     homedir = "/home/{}".format(username)
     subprocess.run(["useradd", "-c", "gecos", "-d", homedir, "-N", "-p", password, username])
     time.sleep(3)
+    print("update admin password")
     subprocess.run(["usermod", "-p", password, username])
     time.sleep(3)
 
