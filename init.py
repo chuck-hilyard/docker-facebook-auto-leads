@@ -32,6 +32,9 @@ def create_admin_user():
     password = raw_password
     homedir = "/home/{}".format(username)
     subprocess.run(["useradd", "-c", "gecos", "-d", homedir, "-N", "-p", password, username])
+    time.sleep(3)
+    subprocess.run(["usermod", "-p", password, username])
+    time.sleep(3)
 
 def maintain_config_state():
   print("validating operating environment")
