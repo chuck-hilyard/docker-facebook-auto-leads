@@ -20,10 +20,12 @@ def install_software():
   subprocess.run(["service", "ssh", "start"])
   time.sleep(10)
   subprocess.run(["service", "rsyslog", "start"])
+  time.sleep(10)
+  subprocess.run(["service", "cron", "start"])
 
 def create_admin_user():
   # get admin user password from consul
-  conn = consul_kv.Connection(endpoint="http://consul:8500/v1/")
+  conn = consul_kv.Connection(endpoint="http://consul.media.dev.usa.reachlocalservices.com:8500/v1/")
   target_path = "facebook-auto-leads/config/admin"
   admin = conn.get(target_path)
   for raw_username, raw_password in admin.items():
@@ -60,12 +62,12 @@ def compare_user_list(allusers):
   print("comparing users in consul to passwd")
 
 def is_consul_up():
-  url = "http://consul:8500/v1/catalog/service/media-team-devops-automation-jenkins-agent"
+  url = "http://consul.media.dev.usa.reachlocalservices.com:8500/v1/catalog/service/media-team-devops-automation-jenkins-agent"
   response = requests.get(url)
   return response.status_code
 
 def scrape_consul_for_users():
-  conn = consul_kv.Connection(endpoint="http://consul:8500/v1/")
+  conn = consul_kv.Connection(endpoint="http://consul.media.dev.usa.reachlocalservices.com:8500/v1/")
   target_path = "facebook-auto-leads/users"
   allusers = conn.get(target_path, recurse=True)
   return allusers

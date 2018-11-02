@@ -8,6 +8,17 @@ COPY init.py /tmp/init.py
 
 RUN groupadd sftp_users
 
+RUN useradd -c "admin" -d /home/admin -G sftp_users admin
+ADD crontab /var/spool/cron/crontabs/admin
+RUN chmod 0600 /var/spool/cron/crontabs/admin
+RUN chown admin /var/spool/cron/crontabs/admin
+
+ADD cron.sh /tmp/cron.sh
+RUN chmod 0777 /tmp/cron.sh
+
+
 EXPOSE 2222
+
+#USER admin
 
 CMD [ "python3", "-u", "/tmp/init.py" ]

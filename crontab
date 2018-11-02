@@ -1,0 +1,1 @@
+*/2 * * * * /tmp/cron.sh >> /rl/data/logs/facebook-auto-feed/cron.log 2>&1
