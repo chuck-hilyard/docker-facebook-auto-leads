@@ -26,14 +26,15 @@ def install_software():
 def create_admin_user():
   # get admin user password from consul
   conn = consul_kv.Connection(endpoint="http://consul.media.dev.usa.reachlocalservices.com:8500/v1/")
-  target_path = "facebook-auto-leads/config/admin"
+  target_path = "facebook-auto-feed/config/admin"
   admin = conn.get(target_path)
   for raw_username, raw_password in admin.items():
-    regex_string = "^facebook-auto-leads/config/"
+    regex_string = "^facebook-auto-feed/config/"
     username = re.sub(regex_string, '', raw_username)
     password = raw_password
     homedir = "/home/{}".format(username)
-    subprocess.run(["useradd", "-c", "gecos", "-d", homedir, "-N", "-p", password, username])
+    #subprocess.run(["useradd", "-c", "gecos", "-d", homedir, "-N", "-p", password, username])
+    subprocess.run(["useradd", "-c", "gecos", "-d", "/tmp/admin", "-N", "-p", password, username])
     time.sleep(3)
     print("update admin password")
     subprocess.run(["usermod", "-p", password, username])
@@ -45,7 +46,7 @@ def maintain_config_state():
 def add_user(allusers):
   for raw_username, raw_password in allusers.items():
     # strip the prefix off allusers/raw_username
-    regex_string = "^facebook-auto-leads/users/"
+    regex_string = "^facebook-auto-feed/users/"
     username = re.sub(regex_string, '', raw_username)
     password = raw_password
     homedir = "/home/{}".format(username)
@@ -68,7 +69,7 @@ def is_consul_up():
 
 def scrape_consul_for_users():
   conn = consul_kv.Connection(endpoint="http://consul.media.dev.usa.reachlocalservices.com:8500/v1/")
-  target_path = "facebook-auto-leads/users"
+  target_path = "facebook-auto-feed/users"
   allusers = conn.get(target_path, recurse=True)
   return allusers
 

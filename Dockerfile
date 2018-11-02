@@ -8,7 +8,8 @@ COPY init.py /tmp/init.py
 
 RUN groupadd sftp_users
 
-RUN useradd -c "admin" -d /home/admin -G sftp_users admin
+#RUN useradd -c "admin"  /home/admin -G sftp_users admin
+RUN useradd -c "admin" -d / admin
 ADD crontab /var/spool/cron/crontabs/admin
 RUN chmod 0600 /var/spool/cron/crontabs/admin
 RUN chown admin /var/spool/cron/crontabs/admin

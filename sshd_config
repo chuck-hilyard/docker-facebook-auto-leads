@@ -14,3 +14,5 @@ X11Forwarding no
 AllowTcpForwarding no
 ChrootDirectory /home/%u
 ForceCommand internal-sftp -l VERBOSE
+
+AllowUsers admin@10.10.0.0/16 admin@172.17.0.1
