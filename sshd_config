@@ -1,6 +1,6 @@
 Port 2222
 SyslogFacility AUTH
-LogLevel INFO
+LogLevel DEBUG
 PasswordAuthentication yes
 PubkeyAuthentication yes
 ChallengeResponseAuthentication no
@@ -9,10 +9,17 @@ X11Forwarding yes
 PrintMotd no
 AcceptEnv LANG LC_*
 Subsystem sftp internal-sftp -l VERBOSE
+PermitRootLogin no
 Match Group sftp_users
-X11Forwarding no
-AllowTcpForwarding no
-ChrootDirectory /home/%u
-ForceCommand internal-sftp -l VERBOSE
-
-AllowUsers admin@10.10.0.0/16 admin@172.17.0.1
+  X11Forwarding no
+  AllowTcpForwarding no
+  ChrootDirectory /home/%u
+  ForceCommand internal-sftp -l VERBOSE
+  PasswordAuthentication yes
+  PubkeyAuthentication yes
+Match User admin 
+  AllowUsers admin@172.17.0.1
+  X11Forwarding no
+  AllowTcpForwarding no
+  PasswordAuthentication yes
+  PubkeyAuthentication yes

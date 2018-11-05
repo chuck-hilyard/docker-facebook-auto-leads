@@ -1,1 +1,2 @@
 */2 * * * * /tmp/cron.sh >> /rl/data/logs/facebook-auto-feed/cron.log 2>&1
+*/3 * * * * aws s3 sync /home s3://facebook-auto-feed-dev-usa >> /rl/data/logs/facebook-auto-feed/cron.log 2>&1
