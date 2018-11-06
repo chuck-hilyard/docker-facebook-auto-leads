@@ -13,7 +13,7 @@ RUN useradd -c "admin" -d / admin
 ADD crontab /var/spool/cron/crontabs/admin
 RUN chmod 0600 /var/spool/cron/crontabs/admin
 RUN chown admin /var/spool/cron/crontabs/admin
-RUN mkdir -p /rl/{product,data/shared/configs,data/logs}; chmod -R 777 /rl
+#RUN mkdir -p /rl/{product,data/shared/configs,data/logs}; chmod -R 777 /rl
 
 ADD cron.sh /tmp/cron.sh
 RUN chmod 0777 /tmp/cron.sh
