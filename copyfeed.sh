@@ -41,5 +41,3 @@ while read path action file;
      echo "***** SUCCESS : Copied $sourceFilePath to $targetDir *****"
 
 done
-
->> LOG_LOCATION/copyfeed.log
