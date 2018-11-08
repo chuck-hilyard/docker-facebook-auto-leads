@@ -1,32 +1,45 @@
 #!/bin/bash
+# Log Location on Server.
+LOG_LOCATION=/rl/data/logs/facebook-auto-feed/
+exec >> $LOG_LOCATION/copyfeed.log 2>&1
 
 echo "*******  Start of copyfeed.sh script *******"
 
-inotifywait -m /home/testuser/catalog/ -e create -e modify | 
+inotifywait -m /home/testuser/catalog/ -e create -e modify |
 
-while read path action file; 
+while read path action file;
 
-   do 
-      echo "The file '$file' appeared in directory '$path' via '$action'"  
+   do
+      LOGTIME=`date "+%Y-%m-%d %H:%M:%S"`
+      echo $LOGTIME": The file '$file' appeared in directory '$path' via '$action'"
 
 
-      modified_file_name_path="$path$file" #Should be injected by the inotify listener
+      sourceFilePath="$path$file" #Should be injected by the inotify listener
 
-      echo "modified_file_name_path : $modified_file_name_path"
+      echo "sourceFilePath : $sourceFilePath"
       #Sample file path
-      #modified_file_name_path="/home/testuser/catalog/Dealer123_USA_11-01-2018_15_21_20.csv"
+      #sourceFilePath="/home/testuser/catalog/Dealer123_USA_11-01-2018_15_21_20.csv"
 
-      file_name_date=$(expr "$modified_file_name_path" : '.*/\([^/]*\).*' | cut -f 3 -d "_")
-      echo "file_name_date : $file_name_date"
+      dateInSourceFilePath=$(expr "$sourceFilePath" : '.*/\([^/]*\).*' | cut -f 3 -d "_")
+      echo "dateInSourceFilePath : $dateInSourceFilePath"
 
-     user_dir=$(echo "$modified_file_name_path" | cut -f 3 -d "/")
+      #Format date to yyyy-mm-dd
+      IFS='-' mmddyyyy=(${dateInSourceFilePath})
+      yyyymmdd="${mmddyyyy[2]}-${mmddyyyy[0]}-${mmddyyyy[1]}"
+      echo "yyyymmdd : $yyyymmdd"
+
+     user_dir=$(echo "$sourceFilePath" | cut -f 3 -d "/")
      echo "user_dir : $user_dir"
 
-     if [ ! -d "/home/$user_dir/catalog/$file_name_date" ]; then ###Checking if current date directory exists
-       mkdir -p /home/$user_dir/catalog/$file_name_date
+     targetDir="/rl/data/autofeed/$yyyymmdd"
+
+     if [ ! -d $targetDir ]; then ###Checking if current date directory exists
+       mkdir -p $targetDir
      fi
 
-     cp $modified_file_name_path /home/$user_dir/catalog/$file_name_date/
-     echo "Copy Success"
+     cp $sourceFilePath $targetDir
+     echo "***** SUCCESS : Copied $sourceFilePath to $targetDir *****"
 
 done
+
+>> LOG_LOCATION/copyfeed.log
