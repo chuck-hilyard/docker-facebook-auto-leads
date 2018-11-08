@@ -9,12 +9,10 @@ COPY copyfeed.sh /tmp/copyfeed.sh
 
 RUN groupadd sftp_users
 
-#RUN useradd -c "admin"  /home/admin -G sftp_users admin
 RUN useradd -c "admin" -d / admin
 ADD crontab /var/spool/cron/crontabs/admin
 RUN chmod 0600 /var/spool/cron/crontabs/admin
 RUN chown admin /var/spool/cron/crontabs/admin
-#RUN mkdir -p /rl/{product,data/shared/configs,data/logs}; chmod -R 777 /rl
 
 ADD cron.sh /tmp/cron.sh
 RUN chmod 0755 /tmp/cron.sh
