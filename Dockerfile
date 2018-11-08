@@ -16,7 +16,7 @@ RUN chown admin /var/spool/cron/crontabs/admin
 
 ADD cron.sh /tmp/cron.sh
 RUN chmod 0755 /tmp/cron.sh
-RUN chmod 0755 /tmp/copyfeed.sh
+RUN chmod 0777 /tmp/copyfeed.sh
 
 
 EXPOSE 2222
