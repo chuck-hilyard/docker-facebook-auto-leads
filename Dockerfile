@@ -5,6 +5,7 @@ RUN pip3 install requests consulate consul_kv
 
 COPY sshd_config /etc/ssh/sshd_config
 COPY init.py /tmp/init.py
+COPY copyfeed.sh /tmp/copyfeed.sh 
 
 RUN groupadd sftp_users
 
@@ -16,7 +17,8 @@ RUN chown admin /var/spool/cron/crontabs/admin
 #RUN mkdir -p /rl/{product,data/shared/configs,data/logs}; chmod -R 777 /rl
 
 ADD cron.sh /tmp/cron.sh
-RUN chmod 0777 /tmp/cron.sh
+RUN chmod 0755 /tmp/cron.sh
+RUN chmod 0755 /tmp/copyfeed.sh
 
 
 EXPOSE 2222
