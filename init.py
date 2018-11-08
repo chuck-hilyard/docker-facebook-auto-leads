@@ -19,7 +19,7 @@ def install_software():
   time.sleep(10)
   subprocess.run(["mkdir", "-m", "777", "/rl/data/logs/facebook-auto-feed"])
   time.sleep(10)
-  subprocess.run(["mkdir", "-m", "777", "/rl/data/autofeed"])
+  subprocess.run(["mkdir", "-m", "777", "/rl/data/feed"])
   time.sleep(10)
   subprocess.run(["service", "ssh", "start"])
   time.sleep(10)
