@@ -27,6 +27,23 @@ def install_software():
   time.sleep(10)
   subprocess.run(["service", "cron", "start"])
 
+def add_cronjob():
+  conn = consul_kv.Connection(endpoint="http://consul:8500/v1/")
+  target_path_env = "facebook-auto-feed/config/ENVIRONMENT"
+  target_path_platform = "facebook-auto-feed/config/PLATFORM"
+  raw_env = conn.get(target_path_env)
+  raw_platform = conn.get(target_path_platform)
+  regex_string = "^facebook-auto-feed/config/"
+  for k,v in raw_env.items():
+    env = re.sub(regex_string, '', v)
+  for k,v in raw_platform.items():
+    platform = re.sub(regex_string, '', v)
+  cronjob_s3_sync = "*/3 * * * * aws s3 sync /home s3://facebook-auto-feed-{0}-{1}".format(env, platform)
+  #subprocess.run(["echo", cronjob_s3_sync, ">>", "/var/spool/cron/crontabs/admin"])
+  cmd = "echo \"{}\" >> /var/spool/cron/crontabs/admin".format(cronjob_s3_sync)
+  p = subprocess.Popen(cmd, shell=True)
+  os.waitpid(p.pid, 0)
+
 def create_admin_user():
   # get admin user password from consul
   conn = consul_kv.Connection(endpoint="http://consul:8500/v1/")
@@ -37,13 +54,10 @@ def create_admin_user():
     username = re.sub(regex_string, '', raw_username)
     password = raw_password
     homedir = "/home/{}".format(username)
-    #subprocess.run(["useradd", "-c", "gecos", "-d", homedir, "-N", "-p", password, username])
     subprocess.run(["useradd", "-c", "gecos", "-d", "/tmp/admin", "-N", "-p", password, username])
     time.sleep(3)
     print("update admin password")
     subprocess.run(["usermod", "-p", password, username])
-    #time.sleep(3)
-    #subprocess.run(["usermod", "-G", "sftp_users", "-a" , username])
 
 def maintain_config_state():
   print("validating operating environment")
@@ -94,4 +108,5 @@ def main():
 if __name__ == '__main__':
   install_software()
   create_admin_user()
+  add_cronjob()
   main()
