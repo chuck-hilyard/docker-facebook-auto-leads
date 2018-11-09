@@ -43,6 +43,8 @@ def add_cronjob():
   p = subprocess.Popen(cmd, shell=True)
   subprocess.run(["chgrp", "crontab", "/var/spool/cron/crontabs/admin"])
   os.waitpid(p.pid, 0)
+  time.sleep(10)
+  subprocess.run(["service", "cron", "restart"])
 
 def create_admin_user():
   # get admin user password from consul
