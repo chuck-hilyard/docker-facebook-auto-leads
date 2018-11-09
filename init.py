@@ -39,9 +39,9 @@ def add_cronjob():
   for k,v in raw_platform.items():
     platform = re.sub(regex_string, '', v)
   cronjob_s3_sync = "*/3 * * * * aws s3 sync /home s3://facebook-auto-feed-{0}-{1}".format(env, platform)
-  #subprocess.run(["echo", cronjob_s3_sync, ">>", "/var/spool/cron/crontabs/admin"])
   cmd = "echo \"{}\" >> /var/spool/cron/crontabs/admin".format(cronjob_s3_sync)
   p = subprocess.Popen(cmd, shell=True)
+  subprocess.run(["chgrp", "crontab", "/var/spool/cron/crontabs/admin"])
   os.waitpid(p.pid, 0)
 
 def create_admin_user():
