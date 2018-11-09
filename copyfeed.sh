@@ -1,6 +1,6 @@
 #!/bin/bash
 # Log Location on Server.
-currentdate=`date "+%Y-%m-%d %H:%M:%S"`
+currentdate=`date "+%Y-%m-%d"`
 
 LOG_LOCATION=/rl/data/logs/facebook-auto-feed/
 exec >> $LOG_LOCATION/copyfeed-$currentdate.log 2>&1
