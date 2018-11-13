@@ -105,8 +105,9 @@ def main():
     if is_consul_up() == 200:
       print("consul is up")
       allusers = scrape_consul_for_users()
-      compare_user_list(allusers)
-      add_user(allusers)
+      if allusers != None:
+        compare_user_list(allusers)
+        add_user(allusers)
     else:
       print("consul is down")
     time.sleep(60)
