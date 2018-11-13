@@ -89,10 +89,14 @@ def is_consul_up():
   return response.status_code
 
 def scrape_consul_for_users():
-  conn = consul_kv.Connection(endpoint="http://consul:8500/v1/")
-  target_path = "facebook-auto-feed/users"
-  allusers = conn.get(target_path, recurse=True)
-  return allusers
+  try:
+    conn = consul_kv.Connection(endpoint="http://consul:8500/v1/")
+    target_path = "facebook-auto-feed/users"
+    allusers = conn.get(target_path, recurse=True)
+    return allusers
+  except:
+    print("problem scraping consul for users...ignoring")
+    return None
 
 def main():
   while True:
