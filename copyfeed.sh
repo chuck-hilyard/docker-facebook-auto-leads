@@ -4,8 +4,8 @@ echo "*******  Start of copyfeed.sh script *******"
 
 # Log Location on Server.
 LOG_LOCATION=/rl/data/logs/facebook-auto-feed/
-LOGFILE=`date "+%Y-%m-%d"`
-exec >> $LOG_LOCATION/copyfeed_$LOGFILE.log 2>&1
+CURRENTDATE=`date "+%Y-%m-%d"`
+exec >> $LOG_LOCATION/copyfeed_$CURRENTDATE.log 2>&1
 
 inotifywait -m /home/testuser/catalog/ -e create -e modify |
 
