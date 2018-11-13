@@ -44,9 +44,9 @@ while read path action file;
       fi
 
       if cp $modified_file_name_path /rl/data/feed/$yyyymmdd/; then
-          echo "******* Copy Code: $? - Success Copying $modified_file_name_path to /rl/data/feed/$yyyymmdd/  *******"
+          echo "******* Copy Code: $? - SUCCESS Copying $modified_file_name_path to /rl/data/feed/$yyyymmdd/  *******"
       else
-          echo "******* Copy Code: $? - Failed Copying $modified_file_name_path to /rl/data/feed/$yyyymmdd/   *******"
+          echo "******* Copy Code: $? - FAILED Copying $modified_file_name_path to /rl/data/feed/$yyyymmdd/   *******"
       fi
 
 done
