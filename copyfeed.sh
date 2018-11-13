@@ -1,45 +1,51 @@
 #!/bin/bash
-# Log Location on Server.
-currentdate=`date "+%Y-%m-%d"`
-
-LOG_LOCATION=/rl/data/logs/facebook-auto-feed/
-exec >> $LOG_LOCATION/copyfeed-$currentdate.log 2>&1
 
 echo "*******  Start of copyfeed.sh script *******"
+
+# Log Location on Server.
+LOG_LOCATION=/rl/data/logs/facebook-auto-feed/
+exec >> $LOG_LOCATION/copyfeed.log 2>&1
 
 inotifywait -m /home/testuser/catalog/ -e create -e modify |
 
 while read path action file;
 
    do
-      timestamp=`date "+%Y-%m-%d %H:%M:%S"`
-      echo "$timestamp: The file '$file' appeared in directory '$path' via '$action'"
+      LOGTIME=`date "+%Y-%m-%d %H:%M:%S"`
+      echo "$LOGTIME: The file $file appeared in directory $path via $action"
 
 
-      sourceFilePath="$path$file" #Should be injected by the inotify listener
+      modified_file_name_path="$path$file" #Should be injected by the inotify listener
 
-      echo "$timestamp: sourceFilePath : $sourceFilePath"
+      echo "modified_file_name_path : $modified_file_name_path"
       #Sample file path
-      #sourceFilePath="/home/testuser/catalog/Dealer123_USA_11-01-2018_15_21_20.csv"
+      #modified_file_name_path="/home/testuser/catalog/Dealer123_USA_11-01-2018_15_21_20.csv"
 
-      dateInSourceFilePath=$(expr "$sourceFilePath" : '.*/\([^/]*\).*' | cut -f 3 -d "_")
-      echo "$timestamp: dateInSourceFilePath : $dateInSourceFilePath"
+      file_name_date=$(expr "$modified_file_name_path" : '.*/\([^/]*\).*' | cut -f 3 -d "_")
+      echo "file_name_date : $file_name_date"
 
-      #Format date to yyyy-mm-dd
-      IFS='-' mmddyyyy=(${dateInSourceFilePath})
-      yyyymmdd="${mmddyyyy[2]}-${mmddyyyy[0]}-${mmddyyyy[1]}"
-      echo "$timestamp: yyyymmdd : $yyyymmdd"
+      if [ ${#file_name_date} -ne 10 ]; then
+              echo "Incorrect length of file_name_date : ${file_name_date}"
+              exit 1
+      fi
 
-     user_dir=$(echo "$sourceFilePath" | cut -f 3 -d "/")
-     echo "$timestamp: user_dir : $user_dir"
 
-     targetDir="/rl/data/autofeed/$yyyymmdd"
+      yyyymmdd="${file_name_date:6:4}-${file_name_date:0:2}-${file_name_date:3:2}"
 
-     if [ ! -d $targetDir ]; then ###Checking if current date directory exists
-       mkdir -p $targetDir
-     fi
+      user_dir=$(echo "$modified_file_name_path" | cut -f 3 -d "/")
+      echo "user_dir : $user_dir"
 
-     cp $sourceFilePath $targetDir
-     echo "$timestamp: ***** SUCCESS : Copied $sourceFilePath to $targetDir *****"
+      if [ ! -d "/rl/data/feed/$yyyymmdd" ]; then ###Checking if current date directory exists
+          mkdir -p /rl/data/feed/$yyyymmdd
+          echo "Made dir /rl/data/feed/$yyyymmdd"
+      else
+          echo "Dir /rl/data/feed/$yyyymmdd  already exists"
+      fi
+
+      if cp $modified_file_name_path /rl/data/feed/$yyyymmdd/; then
+          echo "******* Copy Code: $? - Success Copying $modified_file_name_path to /rl/data/feed/$yyyymmdd/  *******"
+      else
+          echo "******* Copy Code: $? - Failed Copying $modified_file_name_path to /rl/data/feed/$yyyymmdd/   *******"
+      fi
 
 done
