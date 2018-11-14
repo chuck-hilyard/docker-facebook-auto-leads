@@ -23,7 +23,7 @@ while read path action file;
 
       echo "$LOGTIME: modified_file_name_path : $modified_file_name_path"
       #Sample file path
-      #modified_file_name_path="/home/testuser/catalog/Dealer123_USA_11-01-2018_15_21_20.csv"
+      #modified_file_name_path="/home/testuser/catalog/Dealer123_USA_2018-11-10_15_21_20.csv"
 
       file_name_date=$(expr "$modified_file_name_path" : '.*/\([^/]*\).*' | cut -f 3 -d "_")
       echo "$LOGTIME: file_name_date : $file_name_date"
@@ -34,7 +34,9 @@ while read path action file;
       fi
 
 
-      yyyymmdd="${file_name_date:6:4}-${file_name_date:0:2}-${file_name_date:3:2}"
+      #yyyymmdd="${file_name_date:6:4}-${file_name_date:0:2}-${file_name_date:3:2}"
+
+      yyyymmdd=${file_name_date}
 
       #user_dir=$(echo "$modified_file_name_path" | cut -f 3 -d "/")
       #echo "user_dir : $user_dir"
