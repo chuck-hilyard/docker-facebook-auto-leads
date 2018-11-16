@@ -8,7 +8,7 @@ LOG_LOCATION=/rl/data/logs/facebook-auto-feed/
 CURRENTDATE=`date "+%Y-%m-%d"`
 exec >> $LOG_LOCATION/copyfeed_$CURRENTDATE.log 2>&1
 
-echo "$LOGTIME: Checking if copyfeed process is still running .. "
+echo "$LOGTIME: Pinging copyfeed process .. "
 PROCESS_ID=$(ps -ef | grep inotifywait | grep -v grep | grep -v \<defunct\> | awk '{print $2}')
 echo "PROCESS_ID : $PROCESS_ID"
 if [[ ! -z "$PROCESS_ID" ]]; then
