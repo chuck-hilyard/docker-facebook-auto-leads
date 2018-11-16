@@ -9,7 +9,9 @@ CURRENTDATE=`date "+%Y-%m-%d"`
 exec >> $LOG_LOCATION/copyfeed_$CURRENTDATE.log 2>&1
 
 echo "$LOGTIME: Checking if copyfeed process is still running .. "
-if ps -ef | grep inotifywait | grep -v grep | grep -v \<defunct\> | awk '{print $2}' >/dev/null; then
+PROCESS_ID=$(ps -ef | grep inotifywait | grep -v grep | grep -v \<defunct\> | awk '{print $2}')
+echo "PROCESS_ID : $PROCESS_ID"
+if [[ ! -z "$PROCESS_ID" ]]; then
     echo "$LOGTIME: copyfeed process already running"
 else
     echo "$LOGTIME: copyfeed process NOT running.  Initating a new one"
