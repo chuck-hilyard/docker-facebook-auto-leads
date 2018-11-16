@@ -16,9 +16,9 @@ if [[ ! -z "$PROCESS_ID" ]]; then
 else
     echo "$LOGTIME: copyfeed process NOT running.  Initating a new one"
     # inotify monitoring 2 dirs:
-    # /home/testuser/catalog
-    # /home/testuser2/catalog
-    inotifywait -m /home/testuser/catalog/ /home/testuser2/catalog -e create -e modify |
+    # /home/vautoreachlocal/catalog
+    # /home/homenetautoreachlocal/catalog
+    inotifywait -m /home/vautoreachlocal/catalog/ /home/homenetautoreachlocal/catalog -e create -e modify |
 
     while read path action file;
 
