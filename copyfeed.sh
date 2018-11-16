@@ -1,7 +1,7 @@
 #!/bin/bash
 
 LOGTIME=`date "+%Y-%m-%d %H:%M:%S"`
-echo "$LOGTIME: *******  Start of copyfeed.sh script *******"
+echo "$LOGTIME: Pinging copyfeed .. "
 
 # Log Location on Server.
 LOG_LOCATION=/rl/data/logs/facebook-auto-feed/
@@ -26,12 +26,11 @@ else
           LOGTIME=`date "+%Y-%m-%d %H:%M:%S"`
           echo "$LOGTIME: The file '$file' appeared in directory '$path' via '$action'"
 
-
+          #Sample file path
+          #modified_file_name_path="/home/testuser/catalog/Dealer123_2018-11-10_15:21:20.csv"
           modified_file_name_path="$path$file" #Should be injected by the inotify listener
 
           echo "$LOGTIME: modified_file_name_path : $modified_file_name_path"
-          #Sample file path
-          #modified_file_name_path="/home/testuser/catalog/Dealer123_2018-11-10_15:21:20.csv"
 
           file_name_date=$(expr "$modified_file_name_path" : '.*/\([^/]*\).*' | cut -f 2 -d "_")
           echo "$LOGTIME: file_name_date : $file_name_date"
@@ -41,13 +40,10 @@ else
                   exit 1
           fi
 
-
+          #To convert date format if needed
           #yyyymmdd="${file_name_date:6:4}-${file_name_date:0:2}-${file_name_date:3:2}"
 
           yyyymmdd=${file_name_date}
-
-          #user_dir=$(echo "$modified_file_name_path" | cut -f 3 -d "/")
-          #echo "user_dir : $user_dir"
 
           if [ ! -d "/rl/data/feed/$yyyymmdd" ]; then ###Checking if current date directory exists
               mkdir -p /rl/data/feed/$yyyymmdd
