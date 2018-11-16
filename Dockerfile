@@ -14,8 +14,6 @@ ADD crontab /var/spool/cron/crontabs/admin
 RUN chmod 0600 /var/spool/cron/crontabs/admin
 RUN chown admin /var/spool/cron/crontabs/admin
 
-ADD cron.sh /tmp/cron.sh
-RUN chmod 0755 /tmp/cron.sh
 RUN chmod 0777 /tmp/copyfeed.sh
 
 
