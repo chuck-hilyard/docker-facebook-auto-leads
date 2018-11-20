@@ -8,19 +8,19 @@ UsePAM yes
 X11Forwarding yes
 PrintMotd no
 AcceptEnv LANG LC_*
-Subsystem sftp internal-sftp -l VERBOSE -P REMOVE,RMDIR
+Subsystem sftp internal-sftp
 PermitRootLogin no
 Match Group sftp_users
   X11Forwarding no
   AllowTcpForwarding no
   ChrootDirectory /home/%u
-  ForceCommand internal-sftp -l VERBOSE -P REMOVE,RMDIR
-  #ForceCommand internal-sftp -l VERBOSE 
+  ForceCommand internal-sftp -P remove
   PasswordAuthentication yes
   PubkeyAuthentication yes
 Match User admin 
   AllowUsers admin@172.17.0.1 admin@66.150.153.0/24 admin@34.217.246.0/24 admin@107.185.202.0/24
   X11Forwarding no
   AllowTcpForwarding no
+  ForceCommand internal-sftp 
   PasswordAuthentication yes
   PubkeyAuthentication yes
