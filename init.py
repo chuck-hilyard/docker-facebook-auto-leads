@@ -45,7 +45,7 @@ def add_cronjobs():
   cronjob_home_s3_sync = "*/3 * * * * aws s3 sync /home s3://facebook-auto-feed-{0}-{1}".format(env, platform)
   cmd0 = "echo \"{}\" >> /var/spool/cron/crontabs/admin".format(cronjob_home_s3_sync)
   p = subprocess.Popen(cmd0, shell=True)
-  cronjob_rl_data_s3_sync = "*/3 * * * * aws s3 sync /home s3://facebook-auto-feed-{0}-{1}".format(env, platform)
+  cronjob_rl_data_s3_sync = "*/3 * * * * aws s3 sync /rl/data s3://facebook-auto-feed-{0}-{1}".format(env, platform)
   cmd1 = "echo \"{}\" >> /var/spool/cron/crontabs/admin".format(cronjob_rl_data_s3_sync)
   p = subprocess.Popen(cmd1, shell=True)
 
