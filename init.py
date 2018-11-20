@@ -27,7 +27,7 @@ def install_software():
   time.sleep(10)
   subprocess.run(["service", "cron", "start"])
 
-def add_cronjob():
+def add_cronjobs():
   conn = consul_kv.Connection(endpoint="http://consul:8500/v1/")
   target_path_env = "facebook-auto-feed/config/ENVIRONMENT"
   target_path_platform = "facebook-auto-feed/config/PLATFORM"
@@ -42,9 +42,13 @@ def add_cronjob():
     env = re.sub(regex_string, '', v)
   for k,v in raw_platform.items():
     platform = re.sub(regex_string, '', v)
-  cronjob_s3_sync = "*/3 * * * * aws s3 sync /home s3://facebook-auto-feed-{0}-{1}".format(env, platform)
-  cmd = "echo \"{}\" >> /var/spool/cron/crontabs/admin".format(cronjob_s3_sync)
-  p = subprocess.Popen(cmd, shell=True)
+  cronjob_home_s3_sync = "*/3 * * * * aws s3 sync /home s3://facebook-auto-feed-{0}-{1}".format(env, platform)
+  cmd0 = "echo \"{}\" >> /var/spool/cron/crontabs/admin".format(cronjob_home_s3_sync)
+  p = subprocess.Popen(cmd0, shell=True)
+  cronjob_rl_data_s3_sync = "*/3 * * * * aws s3 sync /home s3://facebook-auto-feed-{0}-{1}".format(env, platform)
+  cmd1 = "echo \"{}\" >> /var/spool/cron/crontabs/admin".format(cronjob_rl_data_s3_sync)
+  p = subprocess.Popen(cmd1, shell=True)
+
   subprocess.run(["chgrp", "crontab", "/var/spool/cron/crontabs/admin"])
   os.waitpid(p.pid, 0)
   time.sleep(10)
@@ -128,5 +132,5 @@ def main():
 if __name__ == '__main__':
   install_software()
   create_admin_user()
-  add_cronjob()
+  add_cronjobs()
   main()
