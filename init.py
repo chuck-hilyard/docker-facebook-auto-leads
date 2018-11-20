@@ -31,8 +31,12 @@ def add_cronjob():
   conn = consul_kv.Connection(endpoint="http://consul:8500/v1/")
   target_path_env = "facebook-auto-feed/config/ENVIRONMENT"
   target_path_platform = "facebook-auto-feed/config/PLATFORM"
-  raw_env = conn.get(target_path_env)
-  raw_platform = conn.get(target_path_platform)
+  try:
+    raw_env = conn.get(target_path_env)
+    raw_platform = conn.get(target_path_platform)
+  except:
+    print("problem connecting to consul...ignoring")
+    return None
   regex_string = "^facebook-auto-feed/config/"
   for k,v in raw_env.items():
     env = re.sub(regex_string, '', v)
@@ -46,11 +50,16 @@ def add_cronjob():
   time.sleep(10)
   subprocess.run(["service", "cron", "restart"])
 
+
 def create_admin_user():
   # get admin user password from consul
   conn = consul_kv.Connection(endpoint="http://consul:8500/v1/")
   target_path = "facebook-auto-feed/config/admin"
-  admin = conn.get(target_path)
+  try:
+    admin = conn.get(target_path)
+  except:
+    print("problem connecting to consul...ignoring")
+    return None
   for raw_username, raw_password in admin.items():
     regex_string = "^facebook-auto-feed/config/"
     username = re.sub(regex_string, '', raw_username)
@@ -85,7 +94,11 @@ def compare_user_list(allusers):
 
 def is_consul_up():
   url = "http://consul:8500/v1/catalog/service/media-team-devops-automation-jenkins-agent"
-  response = requests.get(url)
+  try:
+    response = requests.get(url)
+  except:
+    print("problem checking if consul is up...ignoring")
+    return None
   return response.status_code
 
 def scrape_consul_for_users():
