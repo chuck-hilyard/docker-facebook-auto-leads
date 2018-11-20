@@ -14,8 +14,8 @@ Match Group sftp_users
   X11Forwarding no
   AllowTcpForwarding no
   ChrootDirectory /home/%u
-  #ForceCommand internal-sftp -l VERBOSE -p cd lcd put
-  ForceCommand internal-sftp -l VERBOSE 
+  ForceCommand internal-sftp -l VERBOSE -P rm
+  #ForceCommand internal-sftp -l VERBOSE 
   PasswordAuthentication yes
   PubkeyAuthentication yes
 Match User admin 
