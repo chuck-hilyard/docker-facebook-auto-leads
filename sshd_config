@@ -18,7 +18,7 @@ Match Group sftp_users
   PasswordAuthentication yes
   PubkeyAuthentication yes
 Match User admin 
-  AllowUsers admin@172.17.0.1 admin@66.150.153.0/24 admin@34.217.246.0/24 admin@107.185.202.0/24 admin@10.101.30.0/24
+  AllowUsers admin@172.17.0.1 admin@66.150.153.0/24 admin@34.217.246.0/24 admin@107.185.202.0/24 admin@10.101.30.0/22 admin@10.0.0.0/8
   X11Forwarding no
   AllowTcpForwarding no
   PasswordAuthentication yes
