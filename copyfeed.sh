@@ -19,8 +19,7 @@ else
     # /home/vautoreachlocal/catalog
     # /home/homenetautoreachlocal/catalog
     # /home/autouplinktechreachlocal/catalog
-    inotifywait -m /home/vautoreachlocal/catalog/ /home/homenetautoreachlocal/catalog
-    /home/autouplinktechreachlocal/catalog -e create -e modify |
+    inotifywait -m /home/vautoreachlocal/catalog/ /home/homenetautoreachlocal/catalog/ /home/autouplinktechreachlocal/catalog/ -e create -e modify |
 
     while read path action file;
 
