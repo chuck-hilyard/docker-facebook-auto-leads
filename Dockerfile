@@ -1,6 +1,6 @@
 FROM ubuntu:latest
 
-RUN apt-get update && apt-get upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -yq python3 python3-pip openssh-server rsyslog systemd awscli inotify-tools vim acl
+RUN apt-get update && apt-get upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -yq python3 python3-pip openssh-server rsyslog systemd awscli inotify-tools vim acl rsync
 RUN pip3 install requests consulate consul_kv
 
 COPY sshd_config /etc/ssh/sshd_config
