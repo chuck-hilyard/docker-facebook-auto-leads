@@ -53,7 +53,13 @@ else
               echo "$LOGTIME: Dir /rl/data/feed/$yyyymmdd  already exists"
           fi
 
-          if cp $modified_file_name_path /rl/data/feed/$yyyymmdd/; then
+#          if cp $modified_file_name_path /rl/data/feed/$yyyymmdd/; then
+#              echo "$LOGTIME: ******* Copy Code: $? - SUCCESS Copying $modified_file_name_path to /rl/data/feed/$yyyymmdd/  *******"
+#          else
+#              echo "$LOGTIME: ******* Copy Code: $? - FAILED Copying $modified_file_name_path to /rl/data/feed/$yyyymmdd/   *******"
+#          fi
+
+          if rsync -av --include="*$yyyymmdd*" --exclude="*" $modified_file_name_path /rl/data/feed/$yyyymmdd/; then
               echo "$LOGTIME: ******* Copy Code: $? - SUCCESS Copying $modified_file_name_path to /rl/data/feed/$yyyymmdd/  *******"
           else
               echo "$LOGTIME: ******* Copy Code: $? - FAILED Copying $modified_file_name_path to /rl/data/feed/$yyyymmdd/   *******"
