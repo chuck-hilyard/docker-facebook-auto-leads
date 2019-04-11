@@ -61,7 +61,7 @@ if [[ ! -z "$PROCESS_ID" ]]; then
 else
     echo "$LOGTIME: copyfeed process NOT running.  Initating a new one"
     echo "Looking for files created/modified in last 2 mins"
-    for fileName in  $(find $vautoDir $homenetDir $autouplinkDir -mtime -2m -type f ); do
+    for fileName in  $(find $vautoDir $homenetDir $autouplinkDir -mmin -2 -type f ); do
         echo "$LOGTIME: Found files modified in last 2 mins"
         getDateFromFilename "$fileName"
         if [[ $yyyymmdd != "" ]]; then
