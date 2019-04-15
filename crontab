@@ -1,1 +1,2 @@
-*/2 * * * * /tmp/copyfeed.sh >> /rl/data/logs/facebook-auto-feed/cron.log 2>&1
+*/2 * * * * /tmp/copyfeed.sh >> /rl/data/logs/cron/cron.log 2>&1
+0   0 1 * * /tmp/deletefeed.sh >> /rl/data/logs/cron/cron.log 2>&1
