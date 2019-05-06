@@ -5,7 +5,8 @@ RUN pip3 install requests consulate consul_kv
 
 COPY sshd_config /etc/ssh/sshd_config
 COPY init.py /tmp/init.py
-COPY copyfeed.sh /tmp/copyfeed.sh 
+COPY copyfeed.sh /tmp/copyfeed.sh
+COPY deletefeed.sh /tmp/deletefeed.sh
 
 RUN groupadd sftp_users
 
@@ -15,6 +16,7 @@ RUN chmod 0600 /var/spool/cron/crontabs/admin
 RUN chown admin /var/spool/cron/crontabs/admin
 
 RUN chmod 0777 /tmp/copyfeed.sh
+RUN chmod 0777 /tmp/deletefeed.sh
 
 
 EXPOSE 2222

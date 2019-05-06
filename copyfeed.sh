@@ -8,6 +8,51 @@ LOG_LOCATION=/rl/data/logs/facebook-auto-feed/
 CURRENTDATE=`date "+%Y-%m-%d"`
 exec >> $LOG_LOCATION/copyfeed_$CURRENTDATE.log 2>&1
 
+#global variables
+#monitoring 3 dirs:
+vautoDir=/home/vautoreachlocal/catalog
+homenetDir=/home/homenetautoreachlocal/catalog
+autouplinkDir=/home/autouplinktechreachlocal/catalog
+yyyymmdd=""
+
+#To extract date from filename
+getDateFromFilename() {
+
+  LOGTIME=`date "+%Y-%m-%d %H:%M:%S"`
+  echo "$LOGTIME: fileName : $1"
+
+  fileNameDate=$(expr "$1" : '.*/\([^/]*\).*' | cut -f 2 -d "_")
+  echo "$LOGTIME: fileNameDate : $fileNameDate"
+
+  if [ ${#fileNameDate} -ne 10 ]; then
+      echo "$LOGTIME: ERROR Incorrect length of fileNameDate : ${fileNameDate}" >&2
+      yyyymmdd=""
+      return
+  fi
+
+  #To convert date format if needed
+  #yyyymmdd="${file_name_date:6:4}-${file_name_date:0:2}-${file_name_date:3:2}"
+
+  yyyymmdd=${fileNameDate}
+
+  if [ ! -d "/rl/data/feed/$yyyymmdd" ]; then ###Checking if current date directory exists
+      mkdir -p /rl/data/feed/$yyyymmdd
+      echo "$LOGTIME: Made dir /rl/data/feed/$yyyymmdd"
+  else
+      echo "$LOGTIME: Dir /rl/data/feed/$yyyymmdd  already exists"
+  fi
+
+}
+
+#To copy file from homeDir to dateDir
+copyFileToDateDirectory() {
+    if cp $1 $2; then
+        echo "$LOGTIME: ******* Copy Code: $? - SUCCESS Copying $1 to $2  *******"
+    else
+        echo "$LOGTIME: ******* Copy Code: $? - FAILED Copying $1 to $2   *******" >&2
+    fi
+}
+
 echo "$LOGTIME: Pinging copyfeed process .. "
 PROCESS_ID=$(ps -ef | grep inotifywait | grep -v grep | grep -v \<defunct\> | awk '{print $2}')
 echo "PROCESS_ID : $PROCESS_ID"
@@ -15,51 +60,33 @@ if [[ ! -z "$PROCESS_ID" ]]; then
     echo "$LOGTIME: copyfeed process already running"
 else
     echo "$LOGTIME: copyfeed process NOT running.  Initating a new one"
-    # inotify monitoring 3 dirs:
-    # /home/vautoreachlocal/catalog
-    # /home/homenetautoreachlocal/catalog
-    # /home/autouplinktechreachlocal/catalog
-    inotifywait -m /home/vautoreachlocal/catalog/ /home/homenetautoreachlocal/catalog
-    /home/autouplinktechreachlocal/catalog -e create -e modify |
+    echo "Looking for files created/modified in last 2 mins"
+    for fileName in  $(find $vautoDir $homenetDir $autouplinkDir -mmin -2 -type f ); do
+        echo "$LOGTIME: Found files modified in last 2 mins"
+        getDateFromFilename "$fileName"
+        if [[ $yyyymmdd != "" ]]; then
+            #echo " dateDirectory for $fileName : $yyyymmdd"
+            copyFileToDateDirectory "$fileName" "/rl/data/feed/$yyyymmdd/"
+        fi
+    done
+
+    inotifywait -m $vautoDir $homenetDir $autouplinkDir -e create -e modify |
 
     while read path action file;
-
        do
           LOGTIME=`date "+%Y-%m-%d %H:%M:%S"`
           echo "$LOGTIME: The file '$file' appeared in directory '$path' via '$action'"
 
-          #Sample file path
-          #modified_file_name_path="/home/testuser/catalog/Dealer123_2018-11-10_15:21:20.csv"
-          modified_file_name_path="$path$file" #Should be injected by the inotify listener
+          #fileName="/home/testuser/catalog/Dealer123_2018-11-10_15:21:20.csv"
+          fileName="$path$file" #Should be injected by the inotify listener
 
-          echo "$LOGTIME: modified_file_name_path : $modified_file_name_path"
+          echo "$LOGTIME: fileName : $fileName"
 
-          file_name_date=$(expr "$modified_file_name_path" : '.*/\([^/]*\).*' | cut -f 2 -d "_")
-          echo "$LOGTIME: file_name_date : $file_name_date"
-
-          if [ ${#file_name_date} -ne 10 ]; then
-                  echo "$LOGTIME: Incorrect length of file_name_date : ${file_name_date}"
-                  exit 1
+          getDateFromFilename "$fileName"
+          if [[ $yyyymmdd != "" ]]; then
+            #echo " dateDirectory for $fileName : $yyyymmdd"
+            copyFileToDateDirectory "$fileName" "/rl/data/feed/$yyyymmdd/"
           fi
-
-          #To convert date format if needed
-          #yyyymmdd="${file_name_date:6:4}-${file_name_date:0:2}-${file_name_date:3:2}"
-
-          yyyymmdd=${file_name_date}
-
-          if [ ! -d "/rl/data/feed/$yyyymmdd" ]; then ###Checking if current date directory exists
-              mkdir -p /rl/data/feed/$yyyymmdd
-              echo "$LOGTIME: Made dir /rl/data/feed/$yyyymmdd"
-          else
-              echo "$LOGTIME: Dir /rl/data/feed/$yyyymmdd  already exists"
-          fi
-
-          if cp $modified_file_name_path /rl/data/feed/$yyyymmdd/; then
-              echo "$LOGTIME: ******* Copy Code: $? - SUCCESS Copying $modified_file_name_path to /rl/data/feed/$yyyymmdd/  *******"
-          else
-              echo "$LOGTIME: ******* Copy Code: $? - FAILED Copying $modified_file_name_path to /rl/data/feed/$yyyymmdd/   *******"
-          fi
-
     done
 
 fi
